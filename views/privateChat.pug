@@ -96,7 +96,8 @@ html
           textarea#message-input(cols="30", rows="5", placeholder="Type your message here...")
           button#send-button Send
   script.
-    fetch("http://localhost:8080/api/user/get-user")
+  
+    fetch("http://localhost:8080/api/user/get-user")  // fetching the data from the API
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
