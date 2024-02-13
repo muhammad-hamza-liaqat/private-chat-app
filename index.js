@@ -5,6 +5,11 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 require("./database/connection"); // database connection
 
+// view templates
+app.set('view engine', 'pug');
+app.set('views', './views');
+
+
 // middlewares
 app.use(bodyParser.json());
 app.use(cors());

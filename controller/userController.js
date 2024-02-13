@@ -53,4 +53,13 @@ const login = async (req,res)=>{
     }
 }
 
-module.exports = { registerMe, login };
+
+
+const loginPage = (req,res)=>{
+  res.render('login');
+}
+
+const registerPage = (req,res)=>{
+  res.render('register');
+}
+module.exports = { registerMe, login, loginPage, registerPage };
