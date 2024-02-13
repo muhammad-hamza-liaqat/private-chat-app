@@ -66,11 +66,11 @@ const privateChatPage = (req, res) => {
 
 const getUsers = async (req, res) => {
   try {
-    const users = await userModel.find({}); // Assuming this fetches users from your database
-    res.json({ users }); // Return the users as JSON
+    const users = await userModel.find({}); 
+    res.json({ users });
   } catch (error) {
     console.error("Error fetching user data:", error);
-    res.status(500).json({ error: "Internal Server Error" }); // Return error response
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
