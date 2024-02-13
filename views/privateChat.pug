@@ -9,33 +9,50 @@ html
           margin: 0;
           padding: 0;
           display: flex;
-          align-items: center;
-          justify-content: center;
+          flex-direction: row;
           height: 100vh;
       }
 
-      .container {
+      .user-list-container {
           background-color: #ffffff;
           padding: 20px;
           border-radius: 8px;
           box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-          max-width: 600px;
+          max-width: 300px;
+          width: 100%;
+          text-align: center;
+      }
+
+      .chat-box-container {
+          background-color: #ffffff;
+          padding: 20px;
+          border-radius: 8px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          max-width: calc(100% - 300px);
           width: 100%;
           text-align: center;
       }
 
       .user-list {
-          margin-top: 20px;
           list-style-type: none;
           padding: 0;
+          text-align: left;
+      }
+
+      .chat-box {
+          display: none;
       }
 
   body
-    .container
-      h1 Welcome to Private Chat
-      p You are logged in!
+    .user-list-container
       h2 User List
       ul.user-list
+
+    .chat-box-container
+      h2 Chat Box
+      .chat-box
+        textarea#message-input(cols="30", rows="5", placeholder="Type your message here...") 
+        button#send-button Send
 
   script.
     fetch("http://localhost:8080/api/user/get-user")
@@ -51,8 +68,26 @@ html
         if (data && data.users) { // Ensure data.users exists
           data.users.forEach(user => {
             const listItem = document.createElement('li');
-            listItem.textContent = user.name;
+            listItem.textContent = user.name.trim();
+            listItem.dataset.username = user.name.trim(); // Set data-username attribute to the username
+            listItem.classList.add('chat-user'); // Add class for styling and identification
             userList.appendChild(listItem);
+          });
+
+          // Add event listener for user selection
+          userList.addEventListener('click', function(event) {
+            // Log the clicked element for debugging
+            console.log("Clicked element:", event.target);
+            // Find the closest ancestor with the data-username attribute
+            const selectedUser = event.target.closest('[data-username]');
+            console.log("Selected user element:", selectedUser);
+            if (selectedUser) {
+              const username = selectedUser.dataset.username;
+              console.log("Selected username:", username); // Log selected user
+              const chatBox = document.querySelector('.chat-box');
+              chatBox.innerHTML = `<p>Chatting with ${username}</p><textarea id="message-input" cols="30" rows="5" placeholder="Type your message here..."></textarea><button id="send-button">Send</button>`;
+              chatBox.style.display = 'block'; // Show chat box
+            }
           });
         } else {
           console.error("No users found in the response");
