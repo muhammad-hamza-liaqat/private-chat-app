@@ -1,4 +1,5 @@
 const express = require("express");
+const http = require("http");
 const app = express();
 require("dotenv").config();
 const bodyParser = require("body-parser");
@@ -9,7 +10,6 @@ require("./database/connection"); // database connection
 app.set('view engine', 'pug');
 app.set('views', './views');
 
-
 // middlewares
 app.use(bodyParser.json());
 app.use(cors());
@@ -18,11 +18,15 @@ app.use(express.urlencoded({ extended: true }));
 
 // routes
 const userRoutes = require("./routes/userRoutes");
-app.use("/api/user",userRoutes);
+app.use("/api/user", userRoutes);
 
+// Create HTTP server
+const server = http.createServer(app);
 
+// Socket.IO setup
+require("./utils/socket.io")(server);
 
-// server
-app.listen(process.env.PORT, () => {
-  console.log(`server running at ${process.env.PORT}`);
+// Start the server
+server.listen(process.env.PORT, () => {
+  console.log(`Server running at ${process.env.PORT}`);
 });
