@@ -11,49 +11,90 @@ html
           display: flex;
           flex-direction: row;
           height: 100vh;
+          justify-content: center;
+          align-items: center;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        max-width: 800px;
+        width: 100%;
       }
 
       .user-list-container {
-          background-color: #ffffff;
-          padding: 20px;
-          border-radius: 8px;
-          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-          max-width: 300px;
-          width: 100%;
-          text-align: center;
-      }
-
-      .chat-box-container {
-          background-color: #ffffff;
-          padding: 20px;
-          border-radius: 8px;
-          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-          max-width: calc(100% - 300px);
-          width: 100%;
-          text-align: center;
+        margin-bottom: 20px;
       }
 
       .user-list {
-          list-style-type: none;
-          padding: 0;
-          text-align: left;
+        list-style-type: none;
+        padding: 0;
+        text-align: left;
+      }
+
+      .user-list li {
+        padding: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .user-list li:hover {
+        background-color: #f0f0f0;
+      }
+
+      .chat-box-container {
+        display: none;
+        transition: opacity 0.5s ease;
+        opacity: 0;
+      }
+
+      .chat-box-container.open {
+        display: block;
+        opacity: 1;
       }
 
       .chat-box {
-          display: none;
+        margin-top: 20px;
       }
 
+      textarea#message-input {
+        width: calc(100% - 80px);
+        margin-bottom: 10px;
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        resize: none;
+      }
+
+      button#send-button {
+        width: 80px;
+        padding: 8px;
+        border: none;
+        border-radius: 4px;
+        background-color: #007bff;
+        color: #fff;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      button#send-button:hover {
+        background-color: #0056b3;
+      }
   body
-    .user-list-container
-      h2 User List
-      ul.user-list
-
-    .chat-box-container
-      h2 Chat Box
-      .chat-box
-        textarea#message-input(cols="30", rows="5", placeholder="Type your message here...") 
-        button#send-button Send
-
+    div.container
+      div.user-list-container
+        h2 User List
+        ul.user-list
+      div.chat-box-container
+        h2 Chat Box
+        div.chat-box
+          p
+          textarea#message-input(cols="30", rows="5", placeholder="Type your message here...")
+          button#send-button Send
   script.
     fetch("http://localhost:8080/api/user/get-user")
       .then(response => {
@@ -84,9 +125,10 @@ html
             if (selectedUser) {
               const username = selectedUser.dataset.username;
               console.log("Selected username:", username); // Log selected user
-              const chatBox = document.querySelector('.chat-box');
-              chatBox.innerHTML = `<p>Chatting with ${username}</p><textarea id="message-input" cols="30" rows="5" placeholder="Type your message here..."></textarea><button id="send-button">Send</button>`;
-              chatBox.style.display = 'block'; // Show chat box
+              const chatBoxContainer = document.querySelector('.chat-box-container');
+              const chatBox = chatBoxContainer.querySelector('.chat-box');
+              chatBox.querySelector('p').textContent = `Chatting with ${username}`;
+              chatBoxContainer.classList.add('open');
             }
           });
         } else {
