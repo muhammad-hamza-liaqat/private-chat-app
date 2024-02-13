@@ -45,7 +45,8 @@ const login = async (req,res)=>{
             return res.status(404).json({message: "invalid email or password"});
         }
         console.log(`${userToFind.email} login `);
-        return res.status(200).json({message: "user login successfully!", user: userToFind.name, email: userToFind.email})
+        // return res.status(200).json({message: "user login successfully!", user: userToFind.name, email: userToFind.email})
+        res.redirect('http://localhost:8080/api/user/private')
         
     } catch (error) {
         console.log("error occured at login controller", error);
@@ -62,4 +63,8 @@ const loginPage = (req,res)=>{
 const registerPage = (req,res)=>{
   res.render('register');
 }
-module.exports = { registerMe, login, loginPage, registerPage };
+
+const privateChatPage = (req,res)=>{
+  res.render('privateChat')
+}
+module.exports = { registerMe, login, loginPage, registerPage, privateChatPage };
