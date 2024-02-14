@@ -24,9 +24,10 @@ app.use("/api/user", userRoutes);
 const server = http.createServer(app);
 
 // Socket.IO setup
-const io = require("socket.io")(server);
-require("./utils/sender")(io); // Sender setup
-require("./utils/receiver")(io); // Receiver setup
+const { initialize } = require("./utils/sockets/connectionManager");
+require("./utils/sockets/privateMessage");
+
+const io = initialize(server);
 
 // Start the server
 server.listen(process.env.PORT, () => {
