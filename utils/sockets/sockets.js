@@ -15,22 +15,18 @@ function initialize(server) {
 
         socket.on('private_message', ({ senderID, recipientID, message }) => {
             console.log(`Private message from ${senderID} to ${recipientID}: ${message}`);
-            const recipientSocket = users[recipientID];
-            if (recipientSocket) {
-                recipientSocket.emit('private_message', { senderID, message });
-                console.log(`Message "${message}" sent successfully to recipient ${recipientID}`);
-            } else {
-                console.log(`Recipient ${recipientID} is not connected.`);
-            }
+            sendPrivateMessage(senderID, recipientID, message);
         });
 
         socket.on('disconnect', () => {
             console.log('User disconnected with socketID', socket.id);
-            Object.keys(users).forEach((key) => {
+            for (const key in users) {
                 if (users[key] === socket) {
                     delete users[key];
+                    console.log(`User with ID ${key} removed from users.`);
+                    break; // Exit loop after deleting the user
                 }
-            });
+            }
         });
     });
 
@@ -39,10 +35,17 @@ function initialize(server) {
     }
 
     function sendPrivateMessage(senderID, recipientID, message) {
-        console.log(`Private message from ${senderID} to ${recipientID}: ${message}`);
+        console.log(`Sending private message from ${senderID} to ${recipientID}: ${message}`);
+
+        const senderSocket = getUserSocket(senderID);
+        if (!senderSocket) {
+            console.log(`Sender ${senderID} is not connected.`);
+            return; // Exit the function if sender is not connected
+        }
 
         const recipientSocket = getUserSocket(recipientID);
         if (recipientSocket) {
+            console.log(`Recipient ${recipientID} is connected.`);
             recipientSocket.emit('private_message', { senderID, message });
             console.log(`Message "${message}" sent successfully to recipient ${recipientID}`);
         } else {
