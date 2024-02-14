@@ -24,12 +24,18 @@ app.use("/api/user", userRoutes);
 const server = http.createServer(app);
 
 // Socket.IO setup
-const { initialize } = require("./utils/sockets/connectionManager");
-require("./utils/sockets/privateMessage");
+const initializeSocket = require("./utils/sockets/sockets");
 
-const io = initialize(server);
+const { io, sendPrivateMessage } = initializeSocket(server);
+
+// Add event listeners for private messaging
+io.on('connection', (socket) => {
+    socket.on('private_message', ({ senderID, recipientID, message }) => {
+        sendPrivateMessage(senderID, recipientID, message);
+    });
+});
 
 // Start the server
 server.listen(process.env.PORT, () => {
-  console.log(`Server running at ${process.env.PORT}`);
+    console.log(`Server running at ${process.env.PORT}`);
 });
