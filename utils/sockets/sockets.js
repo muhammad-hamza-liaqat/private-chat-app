@@ -10,7 +10,7 @@ function initialize(server) {
 
         socket.on('set_user_id', (userID) => {
             users[userID] = socket;
-            console.log(`user ${userID} connected with socketID ${socket.id}`);
+            console.log(`User ${userID} connected with socketID ${socket.id}`);
         });
 
         socket.on('private_message', ({ senderID, recipientID, message }) => {
@@ -18,6 +18,7 @@ function initialize(server) {
             const recipientSocket = users[recipientID];
             if (recipientSocket) {
                 recipientSocket.emit('private_message', { senderID, message });
+                console.log(`Message "${message}" sent successfully to recipient ${recipientID}`);
             } else {
                 console.log(`Recipient ${recipientID} is not connected.`);
             }
@@ -43,6 +44,7 @@ function initialize(server) {
         const recipientSocket = getUserSocket(recipientID);
         if (recipientSocket) {
             recipientSocket.emit('private_message', { senderID, message });
+            console.log(`Message "${message}" sent successfully to recipient ${recipientID}`);
         } else {
             console.log(`Recipient ${recipientID} is not connected.`);
         }
