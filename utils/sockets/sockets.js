@@ -1,17 +1,19 @@
 const socketIo = require('socket.io');
 
 const users = {};
+console.log('users', users)
 
 function initialize(server) {
     const io = socketIo(server);
 
     io.on('connection', (socket) => {
         console.log('A user connected with socketID', socket.id);
-
-        socket.on('set_user_id', (userID) => {
-            users[userID] = socket;
-            console.log(`User ${userID} connected with socketID ${socket.id}`);
-        });
+        users[socket.id] = socket;   
+        console.log(users)       
+        // socket.on('set_user_id', (userID) => {
+        //     users[userID] = socket;
+        //     console.log(`User ${userID} connected with socketID ${socket.id}`);
+        // });
 
         socket.on('private_message', ({ senderID, recipientID, message }) => {
             console.log(`Private message from ${senderID} to ${recipientID}: ${message}`);
@@ -31,6 +33,7 @@ function initialize(server) {
     });
 
     function getUserSocket(userID) {
+        console.log('user', users)
         return users[userID];
     }
 
