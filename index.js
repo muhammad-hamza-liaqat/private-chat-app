@@ -24,7 +24,7 @@ app.use("/api/user", userRoutes);
 const server = http.createServer(app);
 
 // Socket.IO setup
-const initializeSocket = require("./utils/sockets/sockets");
+const initializeSocket = require("./utils/socket.io/socketData");
 
 const { io, sendPrivateMessage } = initializeSocket(server);
 
