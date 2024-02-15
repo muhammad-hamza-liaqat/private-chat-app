@@ -1,0 +1,2 @@
+this code will only allow you to send the private message from one user to another user.
+this code will not store the data into the database.
